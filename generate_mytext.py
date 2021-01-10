@@ -14,10 +14,13 @@ f.write(''.join(random.choice(letters) for i in range(10)))
 f.close()
 
 # Compute the MD5 checkum and print it
-import hashlib
-with open('mydata.txt','rb') as file_check:
-    file_hash = hashlib.md5()
-    while chunk := file_check.read(8192):
-        file_hash.update(chunk)
+# Define function to compute the checksum of a file
+from hashlib import md5
+def md5sum(filename):
+    hash = md5()
+    with open(filename, "rb") as f:
+        for chunk in iter(lambda: f.read(128 * hash.block_size), b""):
+            hash.update(chunk)
+    return hash.hexdigest()
 
-print(file_hash.hexdigest())
+print(md5sum("mydata.txt"))
